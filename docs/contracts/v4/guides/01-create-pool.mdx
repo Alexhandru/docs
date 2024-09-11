@@ -2,6 +2,38 @@
 title: Create Pool
 ---
 
+In order to create a pool, the *initialize* function needs to be called
+in the `PoolManager`. Let's have a look at its interface.
+
+```solidity
+    function initialize(PoolKey memory key, uint160 sqrtPriceX96, bytes calldata hookData)
+        external
+        returns (int24 tick);
+```
+
+The *key* parameter is a struct that uniquely identifies a pool and has the
+following attributes:
+
+```solidity
+struct PoolKey {
+    /// @notice The lower currency of the pool, sorted numerically
+    Currency currency0;
+    /// @notice The higher currency of the pool, sorted numerically
+    Currency currency1;
+    /// @notice The pool LP fee, capped at 1_000_000. If the highest bit is 1, the pool has a dynamic fee and must be exactly equal to 0x800000
+    uint24 fee;
+    /// @notice Ticks that involve positions must be a multiple of tick spacing
+    int24 tickSpacing;
+    /// @notice The hooks of the pool
+    IHooks hooks;
+}
+```
+
+The *sqrtPriceX96* parameter dictates the starting price of the pool.
+
+The *hookData* parameter is used to pass arbitrary data to the hook contract.
+This data can then be used to further customise behaviour when a pool is initialized.
+
 (TODO: document manager.initialize() and its parameters)
 
 (TODO: mention multicall posm.intializePool)
